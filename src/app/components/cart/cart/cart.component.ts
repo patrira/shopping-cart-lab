@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../../services/cart.service';
 import { Observable } from 'rxjs';
-import { Product } from '../../../services/product.service';
+import { CartService } from '../../../services/cart.service';
+
+interface CartItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
 
 @Component({
   selector: 'app-cart',
@@ -9,14 +14,25 @@ import { Product } from '../../../services/product.service';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  cartItems$: Observable<Product[]> | undefined;
+  cartItems$!: Observable<CartItem[] >;
+  totalItems!: number;
 
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.cartItems$ = this.cartService.cartItems$;  // Now initialized in ngOnInit
+    this.cartItems$ = this.cartService.cartItems$;
+    this.totalItems = this.cartService.getTotalItems();
   }
-  removeFromCart(product: Product): void {
-    this.cartService.removeFromCart(product);
+
+  removeFromCart(productName: string): void {
+    this.cartService.removeFromCart(productName);
+  }
+
+  updateQuantity(productName: string, newQuantity: number): void {
+    this.cartService.updateQuantity(productName, newQuantity);
+  }
+
+  clearCart(): void {
+    this.cartService.clearCart();
   }
 }

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
-export interface Product {
+interface Product {
   name: string;
   category: string;
   price: number;
@@ -18,11 +19,16 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  private productsUrl = 'assets/data.json';  // Path to JSON data
+  private productUrl = 'assets/data.json';  // Mock API URL
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.productsUrl);
+  fetchProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.productUrl).pipe(
+      catchError(error => {
+        console.error('Error fetching product data', error);
+        return of([]);  
+      })
+    );
   }
 }
