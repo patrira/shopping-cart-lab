@@ -1,1 +1,8 @@
-<p>cart works!</p>
+<div *ngFor="let item of cartItems$ | async" class="cart-item">
+    <img [src]="item.image.thumbnail" alt="{{ item.name }}">
+    <h3>{{ item.name }}</h3>
+    <p>{{ item.category }}</p>
+    <p>{{ item.price | currency }}</p>
+    <button (click)="removeFromCart(item)">Remove</button>
+  </div>
+  
